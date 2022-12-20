@@ -34,6 +34,7 @@ def encrypt(original: str) -> Tuple[int, int]:
 
 def decrypt(key1: int, key2: int) -> str:
     decrypted: int = key1 ^ key2  # XOR
+    # necessary to add 7 to avoid an off-by-one error
     temp: bytes = decrypted.to_bytes((decrypted.bit_length() + 7) // 8, "big")
     return temp.decode()
 

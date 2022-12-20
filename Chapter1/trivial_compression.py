@@ -20,11 +20,13 @@ class CompressedGene:
         self._compress(gene)
 
     def _compress(self, gene: str) -> None:
-        self.bit_string: int = 1  # start with sentinel
+        # start with sentinel ('flag value', just for declaration?)
+        self.bit_string: int = 1
         for nucleotide in gene.upper():
-            self.bit_string <<= 2  # shift left two bits
+            # shift left two bits (and adds two 00s on the right)
+            self.bit_string <<= 2
             if nucleotide == "A":  # change last two bits to 00
-                self.bit_string |= 0b00
+                self.bit_string |= 0b00  # 0b tells python it is a base 2 number
             elif nucleotide == "C":  # change last two bits to 01
                 self.bit_string |= 0b01
             elif nucleotide == "G":  # change last two bits to 10
@@ -61,4 +63,5 @@ if __name__ == "__main__":
     compressed: CompressedGene = CompressedGene(original)  # compress
     print("compressed is {} bytes".format(getsizeof(compressed.bit_string)))
     print(compressed)  # decompress
-    print("original and decompressed are the same: {}".format(original == compressed.decompress()))
+    print("original and decompressed are the same: {}".format(
+        original == compressed.decompress()))

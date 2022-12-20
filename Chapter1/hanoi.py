@@ -39,7 +39,10 @@ tower_c: Stack[int] = Stack()
 for i in range(1, num_discs + 1):
     tower_a.push(i)
 
-
+# Recursive steps:
+# Move the upper n-1 discs from tower A to B (the temporary tower), using C as the in-between.
+# Move the single lowest disc from A to C.
+# Move the n-1 discs from tower B to C, using A as the in-between.
 def hanoi(begin: Stack[int], end: Stack[int], temp: Stack[int], n: int) -> None:
     if n == 1:
         end.push(begin.pop())
