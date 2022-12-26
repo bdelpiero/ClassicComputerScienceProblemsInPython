@@ -96,6 +96,7 @@ def dfs(initial: T, goal_test: Callable[[T], bool], successors: Callable[[T], Li
     frontier: Stack[Node[T]] = Stack()
     frontier.push(Node(initial, None))
     # explored is where we've been
+    # The class needs a __hash__ implementation?
     explored: Set[T] = {initial}
 
     # keep going while there is more to explore
@@ -199,15 +200,18 @@ def astar(initial: T, goal_test: Callable[[T], bool], successors: Callable[[T], 
             return current_node
         # check where we can go next and haven't explored
         for child in successors(current_state):
-            new_cost: float = current_node.cost + 1  # 1 assumes a grid, need a cost function for more sophisticated apps
+            # 1 assumes a grid, need a cost function for more sophisticated apps
+            new_cost: float = current_node.cost + 1
 
             if child not in explored or explored[child] > new_cost:
                 explored[child] = new_cost
-                frontier.push(Node(child, current_node, new_cost, heuristic(child)))
+                frontier.push(Node(child, current_node,
+                              new_cost, heuristic(child)))
     return None  # went through everything and never found goal
 
 
 if __name__ == "__main__":
     print(linear_contains([1, 5, 15, 15, 15, 15, 20], 5))  # True
     print(binary_contains(["a", "d", "e", "f", "z"], "f"))  # True
-    print(binary_contains(["john", "mark", "ronald", "sarah"], "sheila"))  # False
+    print(binary_contains(
+        ["john", "mark", "ronald", "sarah"], "sheila"))  # False
