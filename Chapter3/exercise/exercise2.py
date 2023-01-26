@@ -43,18 +43,22 @@ def generate_subgrid(starting_row: int, starting_column: int, num_rows: int, num
     return subgrid
 
 
-def generate_domain(chip: Chip, grid: Grid) -> List[List[GridLocation]]:
+def generate_domain(chip_height: int, chip_width: int, recurse=True) -> List[List[GridLocation]]:
     domain: List[List[GridLocation]] = []
     grid_height: int = len(grid)
     grid_width: int = len(grid[0])
-    chip_height: int = chip.height
-    chip_width: int = chip.width
 
     for row in range(grid_height):
         for col in range(grid_width):
             if col + chip_width <= grid_width and row + chip_height <= grid_height:
+                # could use list comprehension:  [ GridLocation(r, c) for r, c in product(rows, columns)]
                 domain.append(generate_subgrid(
                     row, col, chip_height, chip_width))
+
+    # rotate chip 90 degrees
+    if recurse:
+        return domain + generate_domain(chip.width, chip.height, False)
+
     return domain
 
 
@@ -76,7 +80,7 @@ if __name__ == "__main__":
         'y', 3, 3), Chip('v', 2, 2), Chip('r', 2, 5)]
     locations: Dict[Chip, List[List[GridLocation]]] = {}
     for chip in chips:
-        locations[chip] = generate_domain(chip, grid)
+        locations[chip] = generate_domain(chip.height, chip.width)
 
     csp: CSP[Chip, List[GridLocation]] = CSP(chips, locations)
     csp.add_constraint(CircuitBoardConstraint(chips))
