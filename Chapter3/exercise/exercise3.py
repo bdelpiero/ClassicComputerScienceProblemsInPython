@@ -18,7 +18,7 @@ class GridLocation(NamedTuple):
 
 
 # the empty spaces will be 0s
-# todo: assign randomly generated starting numbers
+# TODO: assign randomly generated starting numbers or read sudoku from file
 def generate_grid(rows: int, columns: int) -> Grid:
     return [[0 for c in range(columns)] for r in range(rows)]
 
@@ -26,6 +26,10 @@ def generate_grid(rows: int, columns: int) -> Grid:
 def display_grid(grid: Grid) -> None:
     for row in grid:
         print("".join(str(row)))
+
+# TODO: the domain for each variable shouldnt be 1-9. I should exclude the numbers already given by the starting grid
+# In that way, I could start solving those numbers with fewer domains:
+# https://levelup.gitconnected.com/csp-algorithm-vs-backtracking-sudoku-304a242f96d0
 
 
 def generate_domain() -> List[int]:
@@ -107,6 +111,7 @@ if __name__ == "__main__":
                 continue
             starting_assignments[GridLocation(i, j)] = sudoku_grid[i][j]
 
+    # TODO: improve
     possible_nums: Dict[GridLocation, List[int]] = {}
     locations: List[GridLocation] = []
     for i in range(len(sudoku_grid)):
